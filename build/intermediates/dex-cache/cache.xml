@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="152de8da301561dcb0946471697a420d8f7a68c5">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-25.2.0_3f0589516120e2fffb42ad13a129f3273e4aa7e6\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="702d339bc0a81d21354cd7e2cf2b67225fa4a16c">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-25.2.0_5243dda402527f2002f1652756577179261adabe\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="810f41e5b7fd99f196ebeabe865ba2c54e7e76dc">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-25.2.0_bbdfe31ecb4c62a5844a08f5fbc01e7cdef16b92\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="fa0446a14ed5dd3725047d6399ffea771a564b30">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-core-ui-25.2.0_539d10e504ec907a4e3b268d6079fd0bf46cc386\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="708c1eab114ae585d4bbf3fde3be5c74d466b741">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_ccc01192f1fec96669500f7106c3235754243b30\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="8fe8a8f77d651982ce5e18f6187dc4daf914ac57">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-fragment-25.2.0_a2fa6c8bdae12121bce89bc181711964cb672038\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\support-compat\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="67eb33110dbacb46a48175b08ae0c96761d2c17d">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-compat-25.2.0_2ef78ef95b22b5a0bee8fa31fbf88d60f91ae3b7\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\design\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="ea6a989b83d19b1b461281e0475a6cd6514897f8">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-25.2.0_f0932a33130185b657024da3be83e05b607c78e8\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="e820b7be8c035dd522da4bc822e8a76c8e27921a">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-core-utils-25.2.0_774785b86e524977e4f9b86b8107701bcac6275f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Scott Wilde\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.6.2\f1bc476cc167b18e66c297df599b2377131a8947\gson-2.6.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="f1bc476cc167b18e66c297df599b2377131a8947">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\gson-2.6.2_794688209d7b22e310046008596e7f889e61d320\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="ee394a892dd21c03a528139c1e8d4e0e1264ac84">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-media-compat-25.2.0_772e9a75c64ae873aa39b35622a2a13c0c395c08\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-25.2.0_40f08e038c281e010b450602f98abd2e45c45dcb\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\transition\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="e51c2f662bb72419632af5192553c37e33890a99">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-transition-25.2.0_c9866fb8bb8306aad67c755a8b42899e3f65c357\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\extras\android\m2repository\com\android\support\support-annotations\25.2.0\support-annotations-25.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="4a5a82a027706397fff621b22fd6fa796e91d7c5">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-25.2.0_320c090aa921d5a96ec52db48a0d9a81bad7a253\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="c0012da3a8ccf4d1b3f9bc44992f7bad8ca32714">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_a75ecb20dcb95809f94b91a61bf716216a5700b1\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Android\Projects\ZeroPercent\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="cb454b52545859ed2f24a6c01366805b0fa04b22">
+        <dex dex="D:\Android\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-25.2.0_203e90cd9fc5910b79f9faaf90485af3312b0e15\classes.dex" />
+    </item>
+
+</items>

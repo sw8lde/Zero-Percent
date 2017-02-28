@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Zero Percent</string>
+    <string name="title_activity_select_contacts">SelectContactsActivity</string>
+    <string name="loading">Loading…</string>
+    <string name="search">Search contacts</string>
+
+    <string name="perm_denied">Permission to read contacts denied</string>
+    <string name="req_perm_title">Contact permission needed</string>
+    <string name="req_perm_message">Contact permission needed to read your contacts. This information is not stored anywhere.</string>
+</resources>
