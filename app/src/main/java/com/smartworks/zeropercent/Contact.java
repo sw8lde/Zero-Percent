@@ -1,5 +1,6 @@
 package com.smartworks.zeropercent;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,13 +10,16 @@ import java.util.Comparator;
 
 public class Contact implements Parcelable {
 
-    public String id, name, phone, label;
+    public String id, name, phone, label, thumbnail;
+    public Uri uri;
 
-    Contact(String id, String name, String phone, String label) {
-        this.id=id;
-        this.name=name;
-        this.phone=phone;
-        this.label=label;
+    Contact(String id, String name, String phone, String label, String thumbnail, Uri uri) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.label = label;
+        this.thumbnail = thumbnail;
+        this.uri = uri;
     }
 
     protected Contact(Parcel in) {
@@ -23,6 +27,8 @@ public class Contact implements Parcelable {
         name = in.readString();
         phone = in.readString();
         label = in.readString();
+        thumbnail = in.readString();
+        uri = Uri.parse(in.readString());
     }
 
     public static final Parcelable.Creator<Contact> CREATOR = new Parcelable.Creator<Contact>() {
@@ -57,6 +63,8 @@ public class Contact implements Parcelable {
         dest.writeString(name);
         dest.writeString(phone);
         dest.writeString(label);
+        dest.writeString(thumbnail);
+        dest.writeString(uri.getPath());
     }
 
     @Override

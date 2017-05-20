@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.Contacts;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
     private int totalContactsCount,loadedContactsCount;
 
 
-    ContactsLoader(Context context,ContactsListAdapter contactsListAdapter){
+    ContactsLoader(Context context,ContactsListAdapter contactsListAdapter) {
         this.context = context;
         this.contactsListAdapter = contactsListAdapter;
         this.tempContactHolder= new ArrayList<>();
@@ -34,21 +35,21 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
     protected Void doInBackground(String[] filters) {
         String filter = filters[0];
         ContentResolver contentResolver = context.getContentResolver();
-        Uri uri = ContactsContract.Contacts.CONTENT_URI;
+        Uri uri = Contacts.CONTENT_URI;
 
         String[] projection = new String[]{
-                ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.Contacts.HAS_PHONE_NUMBER
+                Contacts._ID,
+                Contacts.DISPLAY_NAME,
+                Contacts.HAS_PHONE_NUMBER
         };
         Cursor cursor;
-        if(filter.length()>0) {
+        if(filter.length() > 0) {
             cursor = contentResolver.query(
                     uri,
                     projection,
-                    ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?",
+                    Contacts.DISPLAY_NAME + " LIKE ?",
                     new String[]{filter},
-                    ContactsContract.Contacts.DISPLAY_NAME + " ASC"
+                    Contacts.DISPLAY_NAME + " ASC"
             );
         } else {
             cursor = contentResolver.query(
@@ -56,17 +57,17 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
                     projection,
                     null,
                     null,
-                    ContactsContract.Contacts.DISPLAY_NAME + " ASC"
+                    Contacts.DISPLAY_NAME + " ASC"
             );
         }
 
         totalContactsCount = cursor.getCount();
-        if(cursor!=null && cursor.getCount()>0){
+        if(cursor != null && cursor.getCount()>0){
             while(cursor.moveToNext()) {
-                if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                if(Integer.parseInt(cursor.getString(cursor.getColumnIndex(Contacts.HAS_PHONE_NUMBER))) > 0) {
 
-                    String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                    String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    String id = cursor.getString(cursor.getColumnIndex(Contacts._ID));
+                    String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME));
 
 
                     Cursor phoneCursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -76,7 +77,7 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
                             null
                     );
 
-                    if (phoneCursor != null && phoneCursor.getCount() > 0) {
+                    if(phoneCursor != null && phoneCursor.getCount() > 0) {
                         while (phoneCursor.moveToNext()) {
                             String phId = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
 
@@ -88,7 +89,13 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
                             );
                             String phNo = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-                            tempContactHolder.add(new Contact(phId, name, phNo, label));
+                            Uri contactUri = Contacts.getLookupUri(
+                                    phoneCursor.getLong(phoneCursor.getColumnIndex(Contacts._ID)),
+                                    phoneCursor.getString(phoneCursor.getColumnIndex(Contacts.LOOKUP_KEY)));
+
+                            String thumbnail = phoneCursor.getString(phoneCursor.getColumnIndex(Contacts.PHOTO_THUMBNAIL_URI));
+
+                            tempContactHolder.add(new Contact(phId, name, phNo, label, thumbnail, contactUri));
                         }
                         phoneCursor.close();
                     }
@@ -103,14 +110,14 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
 
     @Override
     protected void onProgressUpdate(Void[] v) {
-        if(this.tempContactHolder.size()>=100) {
+        if(this.tempContactHolder.size() >= 100) {
             contactsListAdapter.addContacts(tempContactHolder);
 
             this.tempContactHolder.clear();
 
-            if(txtProgress!=null){
+            if(txtProgress != null){
                 txtProgress.setVisibility(View.VISIBLE);
-                String progressMessage = "Loading...("+loadedContactsCount+"/"+totalContactsCount+")";
+                String progressMessage = "Loading...(" + loadedContactsCount + "/" + totalContactsCount + ")";
                 txtProgress.setText(progressMessage);
             }
         }
@@ -121,7 +128,7 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
         contactsListAdapter.addContacts(tempContactHolder);
         tempContactHolder.clear();
 
-        if(txtProgress!=null) {
+        if(txtProgress != null) {
             txtProgress.setText("");
             txtProgress.setVisibility(View.GONE);
         }

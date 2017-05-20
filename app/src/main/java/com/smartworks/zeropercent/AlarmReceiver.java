@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 public class AlarmReceiver extends BroadcastReceiver {
     private static final String TAG = "AlarmReceiver";
@@ -13,11 +14,20 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static long alarmInterval = DateUtils.MINUTE_IN_MILLIS;
 
     // Call this from your service
-    public static void startAlarms(final Context context) {
+    public static void startAlarm(final Context context) {
         final AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         // start alarm right away
-        manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, alarmInterval,
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, REQUEST_CODE, alarmInterval,
                 getAlarmIntent(context));
+        Log.d(TAG, "Starting alarm");
+    }
+
+    public static void stopAlarm(final Context context) {
+        final AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, 0);
+        manager.cancel(pendingIntent);
+        Log.d(TAG, "Stopping alarm");
     }
 
     /*
@@ -30,11 +40,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
         if (context == null) {
-            // Somehow you've lost your context; this really shouldn't happen
+            // Somehow you've lost your context; this really shouldn'textView happen
             return;
         }
         if (intent == null){
-            // No intent was passed to your receiver; this also really shouldn't happen
+            // No intent was passed to your receiver; this also really shouldn'textView happen
             return;
         }
         if (intent.getAction() == null) {

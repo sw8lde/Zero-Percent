@@ -1,10 +1,32 @@
 <resources>
     <string name="app_name">Zero Percent</string>
-    <string name="title_activity_select_contacts">SelectContactsActivity</string>
-    <string name="loading">Loading…</string>
-    <string name="search">Search contacts</string>
+    <string name="title_activity_select_contacts">Select Contacts</string>
 
+    <!-- Settings -->
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="set_message">Set message</string>
+    <string name="select_contacts">Select contacts</string>
+    <plurals name="selected_contacts">
+        <item quantity="one">%d contact selected</item>
+        <item quantity="other">%d contacts selected</item>
+    </plurals>
+    <string name="settings">Settings</string>
+    <string name="autostart">Autostart</string>
+    <string name="crit_percent">Critical percent</string>
+    <string name="crit_percent_text">%d%%</string>
+    <string name="normal_freq">Normal frequency</string>
+    <string name="normal_freq_hint">Frequency to check the battery percentage when it is over the critical percent (in minutes)</string>
+    <string name="crit_freq">Critical frequency</string>
+    <string name="crit_freq_hint">Frequency to check the battery percentage when it is under the critical percent (in minutes)</string>
+    <string name="freq_text">%d min</string>
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Selecting contacts -->
     <string name="perm_denied">Permission to read contacts denied</string>
     <string name="req_perm_title">Contact permission needed</string>
     <string name="req_perm_message">Contact permission needed to read your contacts. This information is not stored anywhere.</string>
+    <string name="loading">Loading…</string>
+    <string name="search">Search contacts</string>
 </resources>

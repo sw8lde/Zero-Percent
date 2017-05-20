@@ -2,41 +2,38 @@ package com.smartworks.zeropercent;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public class SelectContactsActivity extends AppCompatActivity {
     private static final String TAG = "SelectContactsActivity";
@@ -65,14 +62,8 @@ public class SelectContactsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(contactsListAdapter.selectedContactsList.isEmpty()) {
-                    setResult(RESULT_CANCELED);
-                } else {
-                    Intent resultIntent = new Intent();
-
-                    resultIntent.putParcelableArrayListExtra("SelectedContacts", contactsListAdapter.selectedContactsList);
-                    setResult(RESULT_OK,resultIntent);
-                }
+                setSelectedContacts(getApplicationContext(), contactsListAdapter.selectedContactsList);
+                setResult(RESULT_OK);
                 finish();
             }
         });
@@ -104,6 +95,8 @@ public class SelectContactsActivity extends AppCompatActivity {
 
         SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setQueryHint(getString(R.string.search));
         searchView.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.search), new MenuItemCompat.OnActionExpandListener() {
@@ -114,8 +107,7 @@ public class SelectContactsActivity extends AppCompatActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                contactsListAdapter.filter("");
-                //hideEmpty();
+                contactsListAdapter.getFilter().filter("");
                 return true;
             }
         });
@@ -129,21 +121,37 @@ public class SelectContactsActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String query) {
                 if (TextUtils.isEmpty(query)) {
-                    contactsListAdapter.filter("");
+                    contactsListAdapter.getFilter().filter("");
                 } else {
-                    contactsListAdapter.filter(query);
+                    contactsListAdapter.getFilter().filter(query);
                 }
                 return true;
             }
         });
 
-        return true;
+        try {
+            Field cursor = TextView.class.getDeclaredField("mCursorDrawableRes");
+            cursor.setAccessible(true);
+            cursor.set(searchView.findViewById(
+                    searchView.getContext().getResources().getIdentifier(
+                            "android:id/search_src_text", null, null)), R.drawable.cursor);
+
+            Field plate = SearchView.class.getDeclaredField("mSearchPlate");
+            plate.setAccessible(true);
+            searchView.findViewById(searchView.getContext().getResources()
+                    .getIdentifier("android:id/search_plate", null, null))
+                    .setBackgroundColor(ContextCompat.getColor(searchView.getContext(), R.color.colorPrimary));
+        } catch(Exception e) {}
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     public static ArrayList<Contact> getSelectedContacts(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new UriDeserializer())
+                .create();
         ArrayList<Contact> contacts = gson.fromJson(
                 prefs.getString(SELECTED_CONTACTS_KEY, null),
                 new TypeToken<ArrayList<Contact>>() {}.getType());
@@ -158,13 +166,27 @@ public class SelectContactsActivity extends AppCompatActivity {
         SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new UriSerializer())
+                .create();
         editor.putString(SELECTED_CONTACTS_KEY, gson.toJson(
                 contacts,
-                new TypeToken<ArrayList<Contact>>() {
-                }.getType()));
+                new TypeToken<ArrayList<Contact>>() {}.getType()));
 
         editor.apply();
     }
+}
 
+class UriSerializer implements JsonSerializer<Uri> {
+    public JsonElement serialize(Uri src, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(src.toString());
+    }
+}
+
+class UriDeserializer implements JsonDeserializer<Uri> {
+    @Override
+    public Uri deserialize(final JsonElement src, final Type srcType,
+                           final JsonDeserializationContext context) throws JsonParseException {
+        return Uri.parse(src.getAsString());
+    }
 }
