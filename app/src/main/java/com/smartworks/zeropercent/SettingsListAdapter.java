@@ -54,7 +54,7 @@ public class SettingsListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return 4;
+        return 2;
     }
 
     @Override
@@ -74,8 +74,6 @@ public class SettingsListAdapter extends BaseExpandableListAdapter {
          * Settings:
          * 0) Autostart
          * 1) Crit %
-         * 2) Normal Freq
-         * 3) Crit Freq
          */
         final ViewHolder holder;
 
@@ -96,18 +94,18 @@ public class SettingsListAdapter extends BaseExpandableListAdapter {
                     holder.picker = (TextView) convertView.findViewById(R.id.setting_numpicker);
                     holder.hint = (TextView) convertView.findViewById(R.id.hint);
                     break;
-                case 2:
-                    holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-                    holder.textView = (TextView) convertView.findViewById(R.id.setting_textview_numpicker);
-                    holder.picker = (TextView) convertView.findViewById(R.id.setting_numpicker);
-                    holder.hint = (TextView) convertView.findViewById(R.id.hint);
-                    break;
-                case 3:
-                    holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-                    holder.textView = (TextView) convertView.findViewById(R.id.setting_textview_numpicker);
-                    holder.picker = (TextView) convertView.findViewById(R.id.setting_numpicker);
-                    holder.hint = (TextView) convertView.findViewById(R.id.hint);
-                    break;
+//                case 2:
+//                    holder.icon = (ImageView) convertView.findViewById(R.id.icon);
+//                    holder.textView = (TextView) convertView.findViewById(R.id.setting_textview_numpicker);
+//                    holder.picker = (TextView) convertView.findViewById(R.id.setting_numpicker);
+//                    holder.hint = (TextView) convertView.findViewById(R.id.hint);
+//                    break;
+//                case 3:
+//                    holder.icon = (ImageView) convertView.findViewById(R.id.icon);
+//                    holder.textView = (TextView) convertView.findViewById(R.id.setting_textview_numpicker);
+//                    holder.picker = (TextView) convertView.findViewById(R.id.setting_numpicker);
+//                    holder.hint = (TextView) convertView.findViewById(R.id.hint);
+//                    break;
             }
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -157,36 +155,36 @@ public class SettingsListAdapter extends BaseExpandableListAdapter {
                     }
                 });
                 break;
-            case 2:
-                holder.icon.setImageResource(R.drawable.ic_timer);
-                holder.textView.setVisibility(View.VISIBLE);
-                holder.textView.setText(R.string.normal_freq);
-                holder.picker.setVisibility(View.VISIBLE);
-                holder.picker.setText(context.getString(R.string.freq_text, prefs.getInt("normal_freq", 5)));
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        initNumPicker(holder, R.string.normal_freq, R.string.freq_text, "normal_freq", 1, 100);
-                    }
-                });
-                holder.hint.setVisibility(View.VISIBLE);
-                holder.hint.setText(R.string.normal_freq_hint);
-                break;
-            case 3:
-                holder.icon.setImageResource(R.drawable.ic_timer);
-                holder.textView.setVisibility(View.VISIBLE);
-                holder.textView.setText(R.string.crit_freq);
-                holder.picker.setVisibility(View.VISIBLE);
-                holder.picker.setText(context.getString(R.string.freq_text, prefs.getInt("crit_freq", 5)));
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        initNumPicker(holder, R.string.crit_freq, R.string.freq_text, "crit_freq", 1, 100);
-                    }
-                });
-                holder.hint.setVisibility(View.VISIBLE);
-                holder.hint.setText(R.string.crit_freq_hint);
-                break;
+//            case 2:
+//                holder.icon.setImageResource(R.drawable.ic_timer);
+//                holder.textView.setVisibility(View.VISIBLE);
+//                holder.textView.setText(R.string.normal_freq);
+//                holder.picker.setVisibility(View.VISIBLE);
+//                holder.picker.setText(context.getString(R.string.freq_text, prefs.getInt("normal_freq", 5)));
+//                convertView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        initNumPicker(holder, R.string.normal_freq, R.string.freq_text, "normal_freq", 1, 100);
+//                    }
+//                });
+//                holder.hint.setVisibility(View.VISIBLE);
+//                holder.hint.setText(R.string.normal_freq_hint);
+//                break;
+//            case 3:
+//                holder.icon.setImageResource(R.drawable.ic_timer);
+//                holder.textView.setVisibility(View.VISIBLE);
+//                holder.textView.setText(R.string.crit_freq);
+//                holder.picker.setVisibility(View.VISIBLE);
+//                holder.picker.setText(context.getString(R.string.freq_text, prefs.getInt("crit_freq", 5)));
+//                convertView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        initNumPicker(holder, R.string.crit_freq, R.string.freq_text, "crit_freq", 1, 100);
+//                    }
+//                });
+//                holder.hint.setVisibility(View.VISIBLE);
+//                holder.hint.setText(R.string.crit_freq_hint);
+//                break;
         }
 
         return convertView;

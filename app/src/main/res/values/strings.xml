@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Zero Percent</string>
     <string name="title_activity_select_contacts">Select Contacts</string>
+    <string name="title_activity_edit_message">Edit Message</string>
 
     <!-- Settings -->
     <string name="enabled">Enabled</string>
@@ -23,10 +24,26 @@
     <string name="set">Set</string>
     <string name="cancel">Cancel</string>
 
-    <!-- Selecting contacts -->
-    <string name="perm_denied">Permission to read contacts denied</string>
-    <string name="req_perm_title">Contact permission needed</string>
-    <string name="req_perm_message">Contact permission needed to read your contacts. This information is not stored anywhere.</string>
-    <string name="loading">Loading…</string>
+    <!-- Permissions -->
+    <string name="contacts_perm_denied">Permission to read contacts denied</string>
+    <string name="req_contacts_perm_title">Contact permission needed</string>
+    <string name="req_contacts_perm_message">Contact permission needed to read your contacts. This information is not stored anywhere.</string>
+    <string name="loc_perm_denied">Permission to access location denied</string>
+    <string name="req_loc_perm_title">Location permission needed</string>
+    <string name="req_loc_perm_message">Location permission needed to send your location. This information is not stored anywhere.</string>
+    <string name="sms_perm_denied">Permission to send sms denied</string>
+    <string name="req_sms_perm_title">Send sms permission needed</string>
+    <string name="req_sms_perm_message">Send sms permission needed to notify your contacts when your battery is critical.</string>
+
+    <!-- Select Contacts -->
     <string name="search">Search contacts</string>
+    <string name="clear_all">Clear selected contacts</string>
+    <string name="loading">Loading…</string>
+    <string name="no_results">No results</string>
+
+    <!-- Edit Message -->
+    <string name="default_message">My phone has low battery and will die soon.
+        Location: </string>
+    <string name="edit_message_hint">Message</string>
+    <string name="include_loc_check">Add location to the end</string>
 </resources>

@@ -3,11 +3,9 @@ package com.smartworks.zeropercent;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -19,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -29,10 +26,12 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int PERMISSION_REQUEST_CONTACT = 9001;
+    private static final int PERMISSION_SEND_SMS = 9002;
+    private static final int PERMISSION_ACCESS_FINE_LOCATION = 9003;
     private View mEnabled;
     private Switch mEnabledSwitch;
-    private View mSetMessage;
-    private TextView mSetMessageTextView;
+    private View mEditMessage;
+    private TextView mEditMessageTextView;
     private View mSelectContacts;
     private TextView mSelectContactsTextView;
     private SettingsListAdapter mSettingsListAdapter;
@@ -47,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initSettings() {
-        SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = prefs.edit();
-
         ViewGroup body = (ViewGroup) findViewById(R.id.activity_main);
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
@@ -59,48 +55,55 @@ public class MainActivity extends AppCompatActivity {
 
         mEnabledSwitch = (Switch) mEnabled.findViewById(R.id.setting_switch);
         mEnabledSwitch.setVisibility(View.VISIBLE);
-        mEnabledSwitch.setChecked(prefs.getBoolean("enabled", false));
+        if (BatteryMonitorService.isRunning) {
+            mEnabledSwitch.setChecked(true);
+            mEnabledSwitch.setText(R.string.enabled);
+        } else {
+            mEnabledSwitch.setChecked(false);
+            mEnabledSwitch.setText(R.string.disabled);
+        }
 
         mEnabled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mEnabledSwitch.toggle();
                 if (mEnabledSwitch.isChecked()) {
-                    editor.putBoolean("enabled", true);
+                    if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(getApplicationContext(),
+                                Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(getApplicationContext(),
+                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        getPermissions();
+                    }
+                    startService(new Intent(getApplicationContext(), BatteryMonitorService.class));
                     mEnabledSwitch.setText(R.string.enabled);
-                    mEnabledSwitch.setTextColor(ContextCompat.getColor(v.getContext(), R.color.textPrimary));
-
-                    PackageManager pm  = getApplicationContext().getPackageManager();
-                    ComponentName componentName = new ComponentName(getApplicationContext(), BatteryMonitorReceiver.class);
-                    pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                            PackageManager.DONT_KILL_APP);
+                    getApplicationContext().getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE).edit().putBoolean("sent_message", false).apply();
                     Log.d(TAG, "Battery monitoring enabled");
                 } else {
-                    editor.putBoolean("false", true);
+                    stopService(new Intent(getApplicationContext(), BatteryMonitorService.class));
                     mEnabledSwitch.setText(R.string.disabled);
-                    mEnabledSwitch.setTextColor(ContextCompat.getColor(v.getContext(), R.color.textDisabled));
-
-                    PackageManager pm  = getApplicationContext().getPackageManager();
-                    ComponentName componentName = new ComponentName(getApplicationContext(), BatteryMonitorReceiver.class);
-                    pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                            PackageManager.DONT_KILL_APP);
                     Log.d(TAG, "Battery monitoring disabled");
                 }
-                editor.apply();
             }
         });
 
-        mSetMessage = inflater.inflate(R.layout.settings_list_child, null);
-        ((ImageView) mSetMessage.findViewById(R.id.icon)).setImageResource(R.drawable.ic_message);
-        body.addView(mSetMessage, 1);
+        mEditMessage = inflater.inflate(R.layout.settings_list_child, null);
+        ((ImageView) mEditMessage.findViewById(R.id.icon)).setImageResource(R.drawable.ic_message);
+        body.addView(mEditMessage, 1);
 
-        mSetMessageTextView = (TextView) mSetMessage.findViewById(R.id.setting_textview);
-        mSetMessageTextView.setVisibility(View.VISIBLE);
-        mSetMessageTextView.setText(R.string.set_message);
-        mSetMessageTextView.setOnClickListener(new View.OnClickListener() {
+        mEditMessageTextView = (TextView) mEditMessage.findViewById(R.id.setting_textview);
+        mEditMessageTextView.setVisibility(View.VISIBLE);
+        mEditMessageTextView.setText(R.string.set_message);
+        mEditMessageTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(new Intent(getApplicationContext(), EditMessageActivity.class));
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.sms_perm_denied), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -119,12 +122,11 @@ public class MainActivity extends AppCompatActivity {
         mSelectContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestContactPermission();
                 if(ContextCompat.checkSelfPermission(getApplicationContext(),
                         Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
                     startActivity(new Intent(getApplicationContext(), SelectContactsActivity.class));
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.perm_denied), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.contacts_perm_denied), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -151,23 +153,19 @@ public class MainActivity extends AppCompatActivity {
         return (int) (pixels * scale + 0.5f);
     }
 
-    private void requestContactPermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.READ_CONTACTS)) {
+    private void getPermissions(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(getString(R.string.req_perm_title));
+                    builder.setTitle(getString(R.string.req_contacts_perm_title));
                     builder.setPositiveButton(android.R.string.ok, null);
-                    builder.setMessage(getString(R.string.req_perm_message));
+                    builder.setMessage(getString(R.string.req_contacts_perm_message));
                     builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @TargetApi(Build.VERSION_CODES.M)
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            requestPermissions(
-                                    new String[]
-                                            {Manifest.permission.READ_CONTACTS}
-                                    , PERMISSION_REQUEST_CONTACT);
+                            requestPermissions(new String[] {Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_CONTACT);
                         }
                     });
                     builder.show();
@@ -176,6 +174,80 @@ public class MainActivity extends AppCompatActivity {
                             new String[]{Manifest.permission.READ_CONTACTS},
                             PERMISSION_REQUEST_CONTACT);
                 }
+            }
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getString(R.string.req_sms_perm_title));
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setMessage(getString(R.string.req_sms_perm_message));
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            requestPermissions(new String[] {Manifest.permission.SEND_SMS}, PERMISSION_SEND_SMS);
+                        }
+                    });
+                    builder.show();
+                } else {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.SEND_SMS},
+                            PERMISSION_SEND_SMS);
+                }
+            }
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getString(R.string.req_loc_perm_title));
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setMessage(getString(R.string.req_loc_perm_message));
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ACCESS_FINE_LOCATION);
+                        }
+                    });
+                    builder.show();
+                } else {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.SEND_SMS},
+                            PERMISSION_SEND_SMS);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CONTACT: {
+                // If request is cancelled, the result arrays are empty.
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    startService(new Intent(getApplicationContext(), BatteryMonitorService.class));
+                    mEnabledSwitch.setText(R.string.enabled);
+                    getApplicationContext().getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE).edit().putBoolean("sent_message", false).apply();
+                    Log.d(TAG, "Battery monitoring enabled");
+                } else {
+                    // permission denied
+                    mEnabledSwitch.setChecked(false);
+                }
+                break;
+            } case PERMISSION_SEND_SMS: {
+                // If request is cancelled, the result arrays are empty.
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    startService(new Intent(getApplicationContext(), BatteryMonitorService.class));
+                    mEnabledSwitch.setText(R.string.enabled);
+                    getApplicationContext().getSharedPreferences(getApplicationContext().getPackageName(), Context.MODE_PRIVATE).edit().putBoolean("sent_message", false).apply();
+                    Log.d(TAG, "Battery monitoring enabled");
+                } else {
+                    // permission denied
+                    mEnabledSwitch.setChecked(false);
+                }
+                break;
             }
         }
     }

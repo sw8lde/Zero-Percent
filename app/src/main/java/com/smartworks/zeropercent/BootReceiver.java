@@ -7,17 +7,14 @@ import android.util.Log;
 
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "BootReceiver";
-    public static final String ACTION_BOOT = "android.intent.action.BOOT_COMPLETED";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equalsIgnoreCase(ACTION_BOOT) &&
+        if (intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED) &&
                 context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE)
                         .getBoolean("autostart", false)) {
             Log.d(TAG, "Boot completed, autostarting");
-            // This intent action can only be set by the Android system after a boot
-            Intent monitorIntent = new Intent(context, BatteryService.class);
-            monitorIntent.putExtra(BatteryService.HANDLE_REBOOT, true);
+            Intent monitorIntent = new Intent(context, BatteryMonitorService.class);
             context.startService(monitorIntent);
         }
     }

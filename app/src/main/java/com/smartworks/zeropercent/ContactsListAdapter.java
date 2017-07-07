@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -91,6 +92,11 @@ public class ContactsListAdapter extends BaseAdapter implements Filterable {
             }
 
         };
+    }
+
+    public void clearSelected() {
+        selectedContactsList.clear();
+        notifyDataSetChanged();
     }
 
     public void addContacts(ArrayList<Contact> contacts){
@@ -202,7 +208,7 @@ public class ContactsListAdapter extends BaseAdapter implements Filterable {
                 overlayField.setAccessible(true);
                 overlayField.set(holder.badge, null);
             } catch (Exception e) {
-                Log.d(TAG, "Badge Reflection Exception: ");
+                Log.d(TAG, "Badge Reflection Exception:");
                 e.printStackTrace();
             }
         }
@@ -216,29 +222,31 @@ public class ContactsListAdapter extends BaseAdapter implements Filterable {
         QuickContactBadge badge;
     }
 
+    @Nullable
     private Bitmap loadContactPhotoThumbnail(String photoData) {
         AssetFileDescriptor afd = null;
 
-        try {
-            Log.d(TAG, "Uri" + photoData);
-            Uri thumbUri = Uri.parse(photoData);
+        if(photoData != null) {
+            try {
+                Uri thumbUri = Uri.parse(photoData);
 
-            afd = context.getContentResolver().openAssetFileDescriptor(thumbUri, "r");
-            FileDescriptor fileDescriptor = afd.getFileDescriptor();
+                afd = context.getContentResolver().openAssetFileDescriptor(thumbUri, "r");
+                FileDescriptor fileDescriptor = afd.getFileDescriptor();
 
-            if (fileDescriptor != null) {
-                return BitmapFactory.decodeFileDescriptor(fileDescriptor, null, null);
-            }
-        } catch (Exception e) {
-            Log.d(TAG, "loadContactPhotoThumbnail");
-            e.printStackTrace();
-        } finally {
-            if (afd != null) {
-                try {
-                    afd.close();
-                } catch (IOException e) {}
+                if(fileDescriptor != null) {
+                    return BitmapFactory.decodeFileDescriptor(fileDescriptor, null, null);
+                }
+            } catch (Exception e) {
+                Log.d(TAG, "loadContactPhotoThumbnail:");
+                e.printStackTrace();
             }
         }
+        if(afd != null) {
+            try {
+                afd.close();
+            } catch(IOException e) {}
+        }
+
         return null;
     }
 
