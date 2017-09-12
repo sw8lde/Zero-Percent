@@ -139,10 +139,10 @@ public class ContactsListAdapter extends BaseAdapter implements Filterable {
 
         holder.name.setText(filteredContactsList.get(position).toString());
         holder.check.setChecked(selectedContactsList.contains(c));
-        holder.check.setOnClickListener(new View.OnClickListener() {
+        holder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                if(holder.check.isChecked()) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
                     selectedContactsList.add(c);
                 } else if(selectedContactsList.contains(c)) {
                     selectedContactsList.remove(c);
@@ -155,12 +155,6 @@ public class ContactsListAdapter extends BaseAdapter implements Filterable {
             @Override
             public void onClick(View view) {
                 holder.check.toggle();
-                    if(holder.check.isChecked()) {
-                        selectedContactsList.add(c);
-                    } else if(selectedContactsList.contains(c)) {
-                        selectedContactsList.remove(c);
-                    }
-                    Log.d("contact", filteredContactsList.get(position).toString());
             }
         });
 

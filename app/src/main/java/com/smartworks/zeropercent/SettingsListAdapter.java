@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Switch;
@@ -94,18 +95,6 @@ public class SettingsListAdapter extends BaseExpandableListAdapter {
                     holder.picker = (TextView) convertView.findViewById(R.id.setting_numpicker);
                     holder.hint = (TextView) convertView.findViewById(R.id.hint);
                     break;
-//                case 2:
-//                    holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-//                    holder.textView = (TextView) convertView.findViewById(R.id.setting_textview_numpicker);
-//                    holder.picker = (TextView) convertView.findViewById(R.id.setting_numpicker);
-//                    holder.hint = (TextView) convertView.findViewById(R.id.hint);
-//                    break;
-//                case 3:
-//                    holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-//                    holder.textView = (TextView) convertView.findViewById(R.id.setting_textview_numpicker);
-//                    holder.picker = (TextView) convertView.findViewById(R.id.setting_numpicker);
-//                    holder.hint = (TextView) convertView.findViewById(R.id.hint);
-//                    break;
             }
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -117,11 +106,10 @@ public class SettingsListAdapter extends BaseExpandableListAdapter {
                 holder.toggle.setVisibility(View.VISIBLE);
                 holder.toggle.setText(R.string.autostart);
                 holder.toggle.setChecked(prefs.getBoolean("autostart", false));
-                convertView.setOnClickListener(new View.OnClickListener() {
+                holder.toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onClick(View v) {
-                        holder.toggle.toggle();
-                        if (holder.toggle.isChecked()) {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) {
                             editor.putBoolean("autostart", true);
 
                             PackageManager pm  = context.getPackageManager();
@@ -141,6 +129,12 @@ public class SettingsListAdapter extends BaseExpandableListAdapter {
                         editor.apply();
                     }
                 });
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        holder.toggle.toggle();
+                    }
+                });
                 break;
             case 1:
                 holder.icon.setImageResource(R.drawable.ic_battery_alert);
@@ -155,36 +149,6 @@ public class SettingsListAdapter extends BaseExpandableListAdapter {
                     }
                 });
                 break;
-//            case 2:
-//                holder.icon.setImageResource(R.drawable.ic_timer);
-//                holder.textView.setVisibility(View.VISIBLE);
-//                holder.textView.setText(R.string.normal_freq);
-//                holder.picker.setVisibility(View.VISIBLE);
-//                holder.picker.setText(context.getString(R.string.freq_text, prefs.getInt("normal_freq", 5)));
-//                convertView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        initNumPicker(holder, R.string.normal_freq, R.string.freq_text, "normal_freq", 1, 100);
-//                    }
-//                });
-//                holder.hint.setVisibility(View.VISIBLE);
-//                holder.hint.setText(R.string.normal_freq_hint);
-//                break;
-//            case 3:
-//                holder.icon.setImageResource(R.drawable.ic_timer);
-//                holder.textView.setVisibility(View.VISIBLE);
-//                holder.textView.setText(R.string.crit_freq);
-//                holder.picker.setVisibility(View.VISIBLE);
-//                holder.picker.setText(context.getString(R.string.freq_text, prefs.getInt("crit_freq", 5)));
-//                convertView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        initNumPicker(holder, R.string.crit_freq, R.string.freq_text, "crit_freq", 1, 100);
-//                    }
-//                });
-//                holder.hint.setVisibility(View.VISIBLE);
-//                holder.hint.setText(R.string.crit_freq_hint);
-//                break;
         }
 
         return convertView;

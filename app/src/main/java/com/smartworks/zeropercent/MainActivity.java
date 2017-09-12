@@ -31,15 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CONTACT = 9001;
     private static final int PERMISSION_SEND_SMS = 9002;
     private static final int PERMISSION_ACCESS_FINE_LOCATION = 9003;
-    private View mEnabled;
     private Switch mEnabledSwitch;
-    private View mEditMessage;
-    private TextView mEditMessageTextView;
-    private View mAddLoc;
-    private TextView mAddLocTextView;
     private CheckBox mAddLocCheckbox;
-    private View mSelectContacts;
-    private TextView mSelectContactsTextView;
     private SettingsListAdapter mSettingsListAdapter;
     private ExpandableListView mSettingsList;
 
@@ -54,15 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private void initSettings() {
         final SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
-        ViewGroup body = (ViewGroup) findViewById(R.id.activity_main);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        mEnabled = inflater.inflate(R.layout.settings_list_child, null);
-        ((ImageView) mEnabled.findViewById(R.id.icon)).setImageResource(R.drawable.ic_battery_alert);
-        body.addView(mEnabled, 0);
-
-        mEnabledSwitch = (Switch) mEnabled.findViewById(R.id.setting_switch);
-        mEnabledSwitch.setVisibility(View.VISIBLE);
+        mEnabledSwitch = (Switch) findViewById(R.id.enabled_switch);
         if (BatteryMonitorService.isRunning) {
             mEnabledSwitch.setChecked(true);
             mEnabledSwitch.setText(R.string.enabled);
@@ -93,21 +78,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mEnabled.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.enabled_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mEnabledSwitch.toggle();
             }
         });
 
-        mEditMessage = inflater.inflate(R.layout.settings_list_child, null);
-        ((ImageView) mEditMessage.findViewById(R.id.icon)).setImageResource(R.drawable.ic_message);
-        body.addView(mEditMessage, 1);
-
-        mEditMessageTextView = (TextView) mEditMessage.findViewById(R.id.setting_textview);
-        mEditMessageTextView.setVisibility(View.VISIBLE);
-        mEditMessageTextView.setText(R.string.set_message);
-        mEditMessage.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.set_message_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -119,16 +97,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mAddLoc = inflater.inflate(R.layout.settings_list_child, null);
-        ((ImageView) mAddLoc.findViewById(R.id.icon)).setImageResource(R.drawable.ic_battery_alert);
-        body.addView(mAddLoc, 2);
-
-        mAddLocTextView = (TextView) mAddLoc.findViewById(R.id.setting_textview);
-        mAddLocTextView.setVisibility(View.VISIBLE);
-        mAddLocTextView.setText(R.string.add_loc);
-
-        mAddLocCheckbox = (CheckBox) mAddLoc.findViewById(R.id.setting_check);
-        mAddLocCheckbox.setVisibility(View.VISIBLE);
+        mAddLocCheckbox = (CheckBox) findViewById(R.id.add_loc_checkbox);
         mAddLocCheckbox.setChecked(prefs.getBoolean("add_loc", false));
         mAddLocCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -144,26 +113,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mAddLoc.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.add_loc_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAddLocCheckbox.toggle();
             }
         });
 
-        mSelectContacts = inflater.inflate(R.layout.settings_list_child, null);
-        ((ImageView) mSelectContacts.findViewById(R.id.icon)).setImageResource(R.drawable.ic_contact);
-        mSelectContacts.findViewById(R.id.hint).setVisibility(View.VISIBLE);
-        ((TextView) mSelectContacts.findViewById(R.id.hint)).setText(
+        ((TextView) findViewById(R.id.contacts_hint)).setText(
                 getResources().getQuantityString(R.plurals.selected_contacts,
                         SelectContactsActivity.getSelectedContacts(this).size(),
                         SelectContactsActivity.getSelectedContacts(this).size()));
-        body.addView(mSelectContacts, 3);
-
-        mSelectContactsTextView = (TextView) mSelectContacts.findViewById(R.id.setting_textview);
-        mSelectContactsTextView.setVisibility(View.VISIBLE);
-        mSelectContactsTextView.setText(R.string.select_contacts);
-        mSelectContacts.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.contacts_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -314,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        ((TextView) mSelectContacts.findViewById(R.id.hint)).setText(
+        ((TextView) findViewById(R.id.contacts_hint)).setText(
                 getResources().getQuantityString(R.plurals.selected_contacts,
                         SelectContactsActivity.getSelectedContacts(this).size(),
                         SelectContactsActivity.getSelectedContacts(this).size()));

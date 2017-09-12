@@ -35,7 +35,6 @@
             <Switch
                 android:id="@+id/setting_switch"
                 android:visibility="gone"
-                android:clickable="false"
                 android:textSize="16sp"
                 android:textColor="@color/textPrimary"
                 android:layout_width="match_parent"
@@ -77,15 +76,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="22dp"
             android:layout_marginRight="22dp"/>
-
-        <CheckBox
-            android:id="@+id/setting_check"
-            android:visibility="gone"
-            android:clickable="false"
-            android:textSize="16sp"
-            android:textColor="@color/textPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
