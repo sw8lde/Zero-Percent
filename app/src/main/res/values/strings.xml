@@ -7,6 +7,7 @@
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="set_message">Set message</string>
+    <string name="add_loc">Add location to the end</string>
     <string name="select_contacts">Select contacts</string>
     <plurals name="selected_contacts">
         <item quantity="one">%d contact selected</item>
@@ -45,5 +46,4 @@
     <string name="default_message">My phone has low battery and will die soon.
         Location: </string>
     <string name="edit_message_hint">Message</string>
-    <string name="include_loc_check">Add location to the end</string>
 </resources>
