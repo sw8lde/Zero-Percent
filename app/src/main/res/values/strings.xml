@@ -7,7 +7,7 @@
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="set_message">Set message</string>
-    <string name="add_loc">Add location to the end</string>
+    <string name="add_loc">Append location to message</string>
     <string name="select_contacts">Select contacts</string>
     <plurals name="selected_contacts">
         <item quantity="one">%d contact selected</item>
@@ -17,22 +17,14 @@
     <string name="autostart">Autostart</string>
     <string name="crit_percent">Critical percent</string>
     <string name="crit_percent_text">%d%%</string>
-    <string name="normal_freq">Normal frequency</string>
-    <string name="normal_freq_hint">Frequency to check the battery percentage when it is over the critical percent (in minutes)</string>
-    <string name="crit_freq">Critical frequency</string>
-    <string name="crit_freq_hint">Frequency to check the battery percentage when it is under the critical percent (in minutes)</string>
-    <string name="freq_text">%d min</string>
     <string name="set">Set</string>
     <string name="cancel">Cancel</string>
 
     <!-- Permissions -->
-    <string name="contacts_perm_denied">Permission to read contacts denied</string>
     <string name="req_contacts_perm_title">Contact permission needed</string>
     <string name="req_contacts_perm_message">Contact permission needed to read your contacts. This information is not stored anywhere.</string>
-    <string name="loc_perm_denied">Permission to access location denied</string>
     <string name="req_loc_perm_title">Location permission needed</string>
     <string name="req_loc_perm_message">Location permission needed to send your location. This information is not stored anywhere.</string>
-    <string name="sms_perm_denied">Permission to send sms denied</string>
     <string name="req_sms_perm_title">Send sms permission needed</string>
     <string name="req_sms_perm_message">Send sms permission needed to notify your contacts when your battery is critical.</string>
 
@@ -44,6 +36,6 @@
 
     <!-- Edit Message -->
     <string name="default_message">My phone has low battery and will die soon.
-        Location: </string>
+        Location:</string>
     <string name="edit_message_hint">Message</string>
 </resources>

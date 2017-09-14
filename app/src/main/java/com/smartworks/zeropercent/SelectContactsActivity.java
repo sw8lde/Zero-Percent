@@ -2,7 +2,6 @@ package com.smartworks.zeropercent;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,7 +13,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,7 +41,8 @@ public class SelectContactsActivity extends AppCompatActivity {
     private static final String SELECTED_CONTACTS_KEY = "selectedContacs";
 
     private ListView contactsChooser;
-    private TextView txtLoadInfo;
+    private TextView loading;
+    private TextView noResults;
     private ContactsListAdapter contactsListAdapter;
     private ContactsLoader contactsLoader;
 
@@ -60,7 +59,8 @@ public class SelectContactsActivity extends AppCompatActivity {
         }
 
         contactsChooser = (ListView) findViewById(R.id.contacts_list);
-        txtLoadInfo = (TextView) findViewById(R.id.txt_load_progress);
+        loading = (TextView) findViewById(R.id.txt_load_progress);
+        noResults = (TextView) findViewById(R.id.no_results);
         contactsListAdapter = new ContactsListAdapter(this, new ArrayList<Contact>());
         contactsChooser.setAdapter(contactsListAdapter);
 
@@ -89,7 +89,7 @@ public class SelectContactsActivity extends AppCompatActivity {
 
         try {
             contactsLoader = new ContactsLoader(this,contactsListAdapter);
-            contactsLoader.txtProgress = txtLoadInfo;
+            contactsLoader.txtProgress = loading;
             contactsLoader.execute(filter);
         } catch(Exception e) {
             e.printStackTrace();
@@ -115,6 +115,7 @@ public class SelectContactsActivity extends AppCompatActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                noResults.setVisibility(View.GONE);
                 contactsListAdapter.getFilter().filter("");
                 return true;
             }
@@ -134,9 +135,9 @@ public class SelectContactsActivity extends AppCompatActivity {
                     contactsListAdapter.getFilter().filter(query);
                 }
                 if(contactsListAdapter.getCount() == 0) {
-                    findViewById(R.id.no_results).setVisibility(View.VISIBLE);
+                    noResults.setVisibility(View.VISIBLE);
                 } else {
-                    findViewById(R.id.no_results).setVisibility(View.GONE);
+                    noResults.setVisibility(View.GONE);
                 }
                 return true;
             }

@@ -65,7 +65,7 @@ public class BatteryMonitorReceiver extends BroadcastReceiver {
             Location myLocation = lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
             double longitude = myLocation.getLongitude();
             double latitude = myLocation.getLatitude();
-            message += "maps.google.com/maps?q=" + latitude + "," + longitude;
+            message += "\nmaps.google.com/maps?q=" + latitude + "," + longitude;
         }
 
         try {

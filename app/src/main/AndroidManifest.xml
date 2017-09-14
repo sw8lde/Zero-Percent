@@ -53,7 +53,8 @@
         <activity
             android:name=".EditMessageActivity"
             android:label="@string/title_activity_edit_message"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"></activity>
     </application>
 
 </manifest>

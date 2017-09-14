@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                     startActivity(new Intent(getApplicationContext(), EditMessageActivity.class));
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.sms_perm_denied), Toast.LENGTH_SHORT).show();
+                    getPermissions();
                 }
             }
         });
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
                     startActivity(new Intent(getApplicationContext(), SelectContactsActivity.class));
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.contacts_perm_denied), Toast.LENGTH_SHORT).show();
+                    getPermissions();
                 }
             }
         });
@@ -179,8 +179,7 @@ public class MainActivity extends AppCompatActivity {
                             new String[]{Manifest.permission.READ_CONTACTS},
                             PERMISSION_REQUEST_CONTACT);
                 }
-            }
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            } else if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                 if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(getString(R.string.req_sms_perm_title));
@@ -199,8 +198,7 @@ public class MainActivity extends AppCompatActivity {
                             new String[]{Manifest.permission.SEND_SMS},
                             PERMISSION_SEND_SMS);
                 }
-            }
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            } else if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(getString(R.string.req_loc_perm_title));
@@ -232,11 +230,11 @@ public class MainActivity extends AppCompatActivity {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                     if(ContextCompat.checkSelfPermission(getApplicationContext(),
-                            Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                            Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                             mEnabledSwitch.setChecked(true);
                     } else {
                         mEnabledSwitch.setChecked(false);
-                        Toast.makeText(getApplicationContext(), getString(R.string.sms_perm_denied), Toast.LENGTH_SHORT).show();
+                        getPermissions();
                     }
                 } else {
                     // permission denied
@@ -248,11 +246,11 @@ public class MainActivity extends AppCompatActivity {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                     if(ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                        Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
                         mEnabledSwitch.setChecked(true);
                     } else {
                         mEnabledSwitch.setChecked(false);
-                        Toast.makeText(getApplicationContext(), getString(R.string.contacts_perm_denied), Toast.LENGTH_SHORT).show();
+                        getPermissions();
                     }
                 } else {
                     // permission denied
