@@ -10,9 +10,8 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED) &&
-                context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE)
-                        .getBoolean("autostart", false)) {
+        if(context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE)
+                .getBoolean("autostart", false)) {
             Log.d(TAG, "Boot completed, autostarting");
             Intent monitorIntent = new Intent(context, BatteryMonitorService.class);
             context.startService(monitorIntent);

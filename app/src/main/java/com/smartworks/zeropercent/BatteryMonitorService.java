@@ -16,6 +16,7 @@ public class BatteryMonitorService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "Starting service");
         batteryMonitorReceiver = new BatteryMonitorReceiver();
 
         IntentFilter batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -25,7 +26,6 @@ public class BatteryMonitorService extends Service {
 
         isRunning = true;
 
-        Log.d(TAG, "Started");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -33,7 +33,7 @@ public class BatteryMonitorService extends Service {
     public void onDestroy() {
         unregisterReceiver(batteryMonitorReceiver);
         isRunning = false;
-        Log.d(TAG, "Destroyed");
+        Log.d(TAG, "Service destroyed");
     }
 
     @Override

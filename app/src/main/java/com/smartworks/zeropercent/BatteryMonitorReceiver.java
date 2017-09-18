@@ -26,24 +26,28 @@ public class BatteryMonitorReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         SharedPreferences prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
 
-        int percent = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        float percent = level / (float) scale * 100.0f;
         int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
         boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                 status == BatteryManager.BATTERY_STATUS_FULL;
-        Log.d(TAG, "Level: " + percent + "\nScale: " + scale + "\nCharging: " + isCharging);
 
-        if(percent < prefs.getInt("crit_percent", 5) && !prefs.getBoolean("sent_message", false) && !isCharging) {
+        Log.d(TAG, String.format("%.1f%% (%d critical),%s charging, %s",
+                percent, prefs.getInt("crit_percent", 5), isCharging ? "":" not",
+                prefs.getBoolean("sent_message", false) ? "sent message": "haven't sent message"));
+
+        if(percent < prefs.getInt("crit_percent", 5) && level != -1 && !prefs.getBoolean("sent_message", false) && !isCharging) {
             sendMessage(context, prefs);
-        } else if(prefs.getBoolean("sent_message", false) && percent > prefs.getInt("crit_percent", 5)) {
-            Log.d(TAG, "Reset send message");
+        } else if(prefs.getBoolean("sent_message", false) && percent > prefs.getInt("crit_percent", 5) && level != -1) {
+            Log.d(TAG, "Reset sent message");
             prefs.edit().putBoolean("sent_message", false).apply();
         }
     }
 
     private void sendMessage(Context context, SharedPreferences prefs) {
-        prefs.edit().putBoolean("sent_message", true).apply();
         Log.d(TAG, "Send Message");
+        prefs.edit().putBoolean("sent_message", true).apply();
 
         ArrayList<Contact> cons = SelectContactsActivity.getSelectedContacts(context);
         String message = prefs.getString("message", context.getString(R.string.default_message));
@@ -63,9 +67,11 @@ public class BatteryMonitorReceiver extends BroadcastReceiver {
                 public void onLocationChanged(final Location location) {}
             });
             Location myLocation = lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-            double longitude = myLocation.getLongitude();
-            double latitude = myLocation.getLatitude();
-            message += "\nmaps.google.com/maps?q=" + latitude + "," + longitude;
+            if(myLocation != null) {
+                double longitude = myLocation.getLongitude();
+                double latitude = myLocation.getLatitude();
+                message += "\nmaps.google.com/maps?q=" + latitude + "," + longitude;
+            }
         }
 
         try {

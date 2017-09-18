@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -102,7 +103,7 @@ public class SelectContactsActivity extends AppCompatActivity {
         inflater.inflate(R.menu.options_menu, menu);
 
         SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setQueryHint(getString(R.string.search));
         searchView.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
@@ -110,13 +111,17 @@ public class SelectContactsActivity extends AppCompatActivity {
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.search), new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                searchView.requestFocus();
+                ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                noResults.setVisibility(View.GONE);
-                contactsListAdapter.getFilter().filter("");
+                searchView.setQuery("", true);
+                ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                 return true;
             }
         });
@@ -134,11 +139,11 @@ public class SelectContactsActivity extends AppCompatActivity {
                 } else {
                     contactsListAdapter.getFilter().filter(query);
                 }
-                if(contactsListAdapter.getCount() == 0) {
-                    noResults.setVisibility(View.VISIBLE);
-                } else {
-                    noResults.setVisibility(View.GONE);
-                }
+//                if(contactsListAdapter.getCount() == 0) {
+//                    noResults.setVisibility(View.VISIBLE);
+//                } else {
+//                    noResults.setVisibility(View.GONE);
+//                }
                 return true;
             }
         });
@@ -189,6 +194,14 @@ public class SelectContactsActivity extends AppCompatActivity {
         }
 
         return contacts;
+    }
+
+    public void updateResults(int count) {
+        if(count == 0) {
+            noResults.setVisibility(View.VISIBLE);
+        } else {
+            noResults.setVisibility(View.GONE);
+        }
     }
 
     public static void setSelectedContacts(Context context, ArrayList<Contact> contacts) {

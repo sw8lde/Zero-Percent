@@ -88,6 +88,7 @@ public class ContactsListAdapter extends BaseAdapter implements Filterable {
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 filteredContactsList = (ArrayList<Contact>) results.values;
+                ((SelectContactsActivity) context).updateResults(results.count);
                 notifyDataSetChanged();
             }
 
@@ -147,7 +148,6 @@ public class ContactsListAdapter extends BaseAdapter implements Filterable {
                 } else if(selectedContactsList.contains(c)) {
                     selectedContactsList.remove(c);
                 }
-                Log.d("contact", filteredContactsList.get(position).toString());
             }
         });
 

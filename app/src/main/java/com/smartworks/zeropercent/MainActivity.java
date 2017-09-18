@@ -214,16 +214,15 @@ public class MainActivity extends AppCompatActivity {
                     builder.show();
                 } else {
                     ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.SEND_SMS},
-                            PERMISSION_SEND_SMS);
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            PERMISSION_ACCESS_FINE_LOCATION);
                 }
             }
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_CONTACT: {
                 // If request is cancelled, the result arrays are empty.
