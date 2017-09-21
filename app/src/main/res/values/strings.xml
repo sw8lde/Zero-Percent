@@ -29,13 +29,12 @@
     <string name="req_sms_perm_message">Send sms permission needed to notify your contacts when your battery is critical.</string>
 
     <!-- Select Contacts -->
-    <string name="search">Search contacts</string>
     <string name="clear_all">Clear selected contacts</string>
-    <string name="loading">Loading…</string>
     <string name="no_results">No results</string>
+    <string name="search">Search contacts</string>
 
     <!-- Edit Message -->
     <string name="default_message">My phone has low battery and will die soon.
         Location:</string>
-    <string name="edit_message_hint">Message</string>
+    <string name="edit_message_title">Set Message</string>
 </resources>

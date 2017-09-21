@@ -8,15 +8,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.smartworks.zeropercent.SelectContactsActivity"
     tools:showIn="@layout/activity_select_contacts">
-    <TextView
-        android:id="@+id/txt_load_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center"
-        android:padding="16dp"
-        android:text="@string/loading"/>
 
     <TextView
         android:visibility="gone"
@@ -29,12 +20,27 @@
         android:padding="16dp"
         android:text="@string/no_results"/>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/contacts_list"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.turingtechnologies.materialscrollbar.DragScrollBar
+        android:id="@+id/drag_scroll_bar"
+        android:layout_width="wrap_content"
+        app:msb_recyclerView="@id/contacts_list"
+        app:msb_lightOnTouch="false"
         android:layout_height="match_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:cacheColorHint="@android:color/white"/>
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <ProgressBar
+        android:id="@+id/loading_spinner"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/colorPrimary"/>
 
 </RelativeLayout>

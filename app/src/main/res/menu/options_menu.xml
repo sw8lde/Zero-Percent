@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/search"
+        android:id="@+id/action_search"
         android:title="@string/search"
         android:icon="@drawable/ic_search"
-        app:showAsAction="collapseActionView|always"
-        app:actionViewClass="android.widget.SearchView"/>
+        android:orderInCategory="100"
+        app:showAsAction="always"/>
 
     <item
-        android:id="@+id/clear_all"
+        android:id="@+id/action_clear_all"
         android:title="@string/clear_all"
         app:showAsAction="never"/>
 

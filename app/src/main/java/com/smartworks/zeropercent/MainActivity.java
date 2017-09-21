@@ -15,16 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -42,120 +40,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initSettings();
-    }
-
-    private void initSettings() {
-        final SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-
-        mEnabledSwitch = (Switch) findViewById(R.id.enabled_switch);
-        if (BatteryMonitorService.isRunning) {
-            mEnabledSwitch.setChecked(true);
-            mEnabledSwitch.setText(R.string.enabled);
-        } else {
-            mEnabledSwitch.setChecked(false);
-            mEnabledSwitch.setText(R.string.disabled);
-        }
-        mEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(mEnabledSwitch.isChecked()) {
-                    if(ContextCompat.checkSelfPermission(getApplicationContext(),
-                            Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
-                            ContextCompat.checkSelfPermission(getApplicationContext(),
-                                    Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                        getPermissions();
-                    } else {
-                        startService(new Intent(getApplicationContext(), BatteryMonitorService.class));
-                        mEnabledSwitch.setText(R.string.enabled);
-                        prefs.edit().putBoolean("sent_message", false).apply();
-                        Log.d(TAG, "Battery monitoring enabled");
-                    }
-                } else {
-                    stopService(new Intent(getApplicationContext(), BatteryMonitorService.class));
-                    mEnabledSwitch.setText(R.string.disabled);
-                    Log.d(TAG, "Battery monitoring disabled");
-                }
-            }
-        });
-
-        findViewById(R.id.enabled_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEnabledSwitch.toggle();
-            }
-        });
-
-        findViewById(R.id.set_message_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-                    startActivity(new Intent(getApplicationContext(), EditMessageActivity.class));
-                } else {
-                    getPermissions();
-                }
-            }
-        });
-
-        mAddLocCheckbox = (CheckBox) findViewById(R.id.add_loc_checkbox);
-        mAddLocCheckbox.setChecked(prefs.getBoolean("add_loc", false));
-        mAddLocCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    if(ContextCompat.checkSelfPermission(getApplicationContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        mAddLocCheckbox.setChecked(false);
-                        getPermissions();
-                    }
-                    prefs.edit().putBoolean("add_loc", mAddLocCheckbox.isChecked()).apply();
-                }
-            }
-        });
-
-        findViewById(R.id.add_loc_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAddLocCheckbox.toggle();
-            }
-        });
-
-        ((TextView) findViewById(R.id.contacts_hint)).setText(
-                getResources().getQuantityString(R.plurals.selected_contacts,
-                        SelectContactsActivity.getSelectedContacts(this).size(),
-                        SelectContactsActivity.getSelectedContacts(this).size()));
-        findViewById(R.id.contacts_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-                    startActivity(new Intent(getApplicationContext(), SelectContactsActivity.class));
-                } else {
-                    getPermissions();
-                }
-            }
-        });
-
-        mSettingsListAdapter = new SettingsListAdapter(this);
-        mSettingsList = (ExpandableListView) findViewById(R.id.settings_list);
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int width = metrics.widthPixels;
-        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            mSettingsList.setIndicatorBounds(width - GetPixelFromDips(56), width - GetPixelFromDips(8));
-        } else {
-            mSettingsList.setIndicatorBoundsRelative(width - GetPixelFromDips(56), width - GetPixelFromDips(8));
-        }
-
-        mSettingsList.setAdapter(mSettingsListAdapter);
-    }
-
-    private int GetPixelFromDips(float pixels) {
-        // Get the screen'toggle density scale
-        final float scale = getResources().getDisplayMetrics().density;
-        // Convert the dps to pixels, based on density scale
-        return (int) (pixels * scale + 0.5f);
     }
 
     private void getPermissions(){
@@ -221,6 +105,120 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private int getPxFromDp(float pixels) {
+        // Get the screen'toggle density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+
+    private void initSettings() {
+        final SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+        mEnabledSwitch = (Switch) findViewById(R.id.enabled_switch);
+        if (BatteryMonitorService.isRunning) {
+            mEnabledSwitch.setChecked(true);
+            mEnabledSwitch.setText(R.string.enabled);
+        } else {
+            mEnabledSwitch.setChecked(false);
+            mEnabledSwitch.setText(R.string.disabled);
+        }
+        mEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(mEnabledSwitch.isChecked()) {
+                    if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(getApplicationContext(),
+                                    Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                        getPermissions();
+                    } else {
+                        startService(new Intent(getApplicationContext(), BatteryMonitorService.class));
+                        mEnabledSwitch.setText(R.string.enabled);
+                        prefs.edit().putBoolean("sent_message", false).apply();
+                        Log.d(TAG, "Battery monitoring enabled");
+                    }
+                } else {
+                    stopService(new Intent(getApplicationContext(), BatteryMonitorService.class));
+                    mEnabledSwitch.setText(R.string.disabled);
+                    Log.d(TAG, "Battery monitoring disabled");
+                }
+            }
+        });
+
+        findViewById(R.id.enabled_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEnabledSwitch.toggle();
+            }
+        });
+
+        findViewById(R.id.set_message_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                    showEditMessageDialog(prefs);
+                } else {
+                    getPermissions();
+                }
+            }
+        });
+
+        mAddLocCheckbox = (CheckBox) findViewById(R.id.add_loc_checkbox);
+        mAddLocCheckbox.setChecked(prefs.getBoolean("add_loc", false));
+        mAddLocCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        mAddLocCheckbox.setChecked(false);
+                        getPermissions();
+                    }
+                    prefs.edit().putBoolean("add_loc", mAddLocCheckbox.isChecked()).apply();
+                }
+            }
+        });
+
+        findViewById(R.id.add_loc_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAddLocCheckbox.toggle();
+            }
+        });
+
+        ((TextView) findViewById(R.id.contacts_hint)).setText(
+                getResources().getQuantityString(R.plurals.selected_contacts,
+                        SelectContactsActivity.getSelectedContacts(this).size(),
+                        SelectContactsActivity.getSelectedContacts(this).size()));
+        findViewById(R.id.contacts_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(new Intent(getApplicationContext(), SelectContactsActivity.class));
+                } else {
+                    getPermissions();
+                }
+            }
+        });
+
+        mSettingsListAdapter = new SettingsListAdapter(this);
+        mSettingsList = (ExpandableListView) findViewById(R.id.settings_list);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            mSettingsList.setIndicatorBounds(width - getPxFromDp(56), width - getPxFromDp(8));
+        } else {
+            mSettingsList.setIndicatorBoundsRelative(width - getPxFromDp(56), width - getPxFromDp(8));
+        }
+
+        mSettingsList.setAdapter(mSettingsListAdapter);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -276,5 +274,42 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getQuantityString(R.plurals.selected_contacts,
                         SelectContactsActivity.getSelectedContacts(this).size(),
                         SelectContactsActivity.getSelectedContacts(this).size()));
+    }
+
+    public void showEditMessageDialog(final SharedPreferences prefs) {
+        final EditText msg = new EditText(this);
+        msg.setText(prefs.getString("message", getString(R.string.default_message)));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.edit_message_title)
+            .setView(msg)
+            .setPositiveButton(R.string.set, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("message", msg.getText().toString());
+                    editor.apply();
+
+                    ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(msg.getWindowToken(), 0);
+                }
+            })
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(msg.getWindowToken(), 0);
+                }
+            })
+            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(msg.getWindowToken(), 0);
+                }
+            })
+            .show();
+
+        msg.requestFocus();
+        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
     }
 }
