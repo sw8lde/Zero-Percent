@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">Zero Percent</string>
     <string name="title_activity_select_contacts">Select Contacts</string>
-    <string name="title_activity_edit_message">Edit Message</string>
+
+    <!-- Ads -->
+    <string name="app_ad_id">ca-app-pub-8817011267029733~1981628027</string>
+    <string name="main_banner_ad_unit_id">ca-app-pub-8817011267029733/8215863883</string>
+    <string name="contacts_banner_ad_unit_id">ca-app-pub-8817011267029733/2093131057</string>
+    <string name="test_device">320DCB5181F682B78383A8DEEF5716E0</string>
 
     <!-- Settings -->
     <string name="enabled">Enabled</string>
@@ -16,17 +21,17 @@
     <string name="settings">Settings</string>
     <string name="autostart">Autostart</string>
     <string name="crit_percent">Critical percent</string>
-    <string name="crit_percent_text">%d%%</string>
+    <string name="crit_percent_value">%d%%</string>
     <string name="set">Set</string>
     <string name="cancel">Cancel</string>
 
     <!-- Permissions -->
     <string name="req_contacts_perm_title">Contact permission needed</string>
-    <string name="req_contacts_perm_message">Contact permission needed to read your contacts. This information is not stored anywhere.</string>
+    <string name="req_contacts_perm_message">Access to your contacts is required to send them a message. This information is not stored anywhere.</string>
     <string name="req_loc_perm_title">Location permission needed</string>
-    <string name="req_loc_perm_message">Location permission needed to send your location. This information is not stored anywhere.</string>
+    <string name="req_loc_perm_message">Access to your location is required to send your location. This information is not stored anywhere.</string>
     <string name="req_sms_perm_title">Send sms permission needed</string>
-    <string name="req_sms_perm_message">Send sms permission needed to notify your contacts when your battery is critical.</string>
+    <string name="req_sms_perm_message">Ability to send sms is required for this app to function.</string>
 
     <!-- Select Contacts -->
     <string name="clear_all">Clear selected contacts</string>

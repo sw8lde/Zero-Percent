@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:animateLayoutChanges="true"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.smartworks.zeropercent.MainActivity"
+    tools:showIn="@layout/activity_main">
 
     <LinearLayout
         android:id="@+id/enabled_view"
@@ -14,17 +20,19 @@
         android:background="?attr/selectableItemBackground">
         <ImageView
             android:src="@drawable/ic_battery_alert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="24dp"
-            android:layout_marginEnd="24dp"/>
+            style="@style/SettingsIcon"/>
+
+        <TextView
+            android:id="@+id/enabled_text"
+            android:text="@string/enabled"
+            style="@style/SettingsText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
 
         <Switch
             android:id="@+id/enabled_switch"
-            android:textSize="16sp"
-            android:textColor="@color/textPrimary"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
@@ -37,16 +45,11 @@
         android:background="?attr/selectableItemBackground">
         <ImageView
             android:src="@drawable/ic_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="24dp"
-            android:layout_marginEnd="24dp"/>
+            style="@style/SettingsIcon"/>
 
         <TextView
             android:text="@string/set_message"
-            android:textColor="@color/textPrimary"
-            android:textSize="16sp"
+            style="@style/SettingsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -60,16 +63,11 @@
         android:background="?attr/selectableItemBackground">
         <ImageView
             android:src="@drawable/ic_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="24dp"
-            android:layout_marginEnd="24dp"/>
+            style="@style/SettingsIcon"/>
 
         <TextView
             android:text="@string/add_loc"
-            android:textColor="@color/textPrimary"
-            android:textSize="16sp"
+            style="@style/SettingsText"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"/>
@@ -89,11 +87,7 @@
         android:background="?attr/selectableItemBackground">
         <ImageView
             android:src="@drawable/ic_contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="24dp"
-            android:layout_marginEnd="24dp"/>
+            style="@style/SettingsIcon"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -101,8 +95,7 @@
             android:orientation="vertical">
             <TextView
                 android:text="@string/select_contacts"
-                android:textColor="@color/textPrimary"
-                android:textSize="16sp"
+                style="@style/SettingsText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -115,17 +108,111 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ExpandableListView
+    <View
+        android:background="@color/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
         android:id="@+id/settings_list"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/arrow_down"
+            android:src="@drawable/ic_arrow_down"
+            style="@style/SettingsIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"/>
+
+        <TextView
+            android:text="@string/settings"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/settings_list_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/autostart_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="horizontal"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:src="@drawable/ic_autostart"
+                style="@style/SettingsIcon"/>
+
+            <TextView
+                android:text="@string/autostart"
+                style="@style/SettingsText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+            <Switch
+                android:id="@+id/autostart_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/crit_percent_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="horizontal"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:src="@drawable/ic_battery_alert"
+                style="@style/SettingsIcon"/>
+
+            <TextView
+                android:text="@string/crit_percent"
+                style="@style/SettingsText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/crit_precent"
+                style="@style/SettingsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:groupIndicator="@drawable/expandable_list_indicator"
-        android:childDivider="@null"
-        android:divider="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autostart" />
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/contacts_banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
 
 </LinearLayout>

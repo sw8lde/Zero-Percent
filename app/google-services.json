@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "145799442307",
+    "firebase_url": "https://zero-percent.firebaseio.com",
+    "project_id": "zero-percent",
+    "storage_bucket": "zero-percent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145799442307:android:7deaf8b163f439c9",
+        "android_client_info": {
+          "package_name": "com.smartworks.zeropercent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145799442307-7qjr3jogafor5d7442b7ic1ev0qutc5v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4FTuHYn4gKqpPGSCU4UrwRkZ6-ro2MPg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

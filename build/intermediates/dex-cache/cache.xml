@@ -3,6 +3,15 @@
 
     <item
         is-multidex="true"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\1ca32c8a48e755b89621c35bae49cebc86f68a6a\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="49743d94bd8f62b64049c3e3065c18598ce2ca7f">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_f17484e5678c589ff2b0dc3b773bcc4a9f8f3358\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Projects\ZeroPercent\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         optimize="true"
@@ -12,21 +21,102 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\94030884b90914f1d9ab073acd7d426a7e443764\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="dc73c5de83617537447413fb09834f3dadb276fb">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_89d3a434a6a0a8d8d8ba846b21c7cfe670d9dafb\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\b0b67b189f26e8de61bd98f2775541a367b0d0b3\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="453427e529ccd47ef859c7d739a59ab32f7f14ee">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_cfb9da225dd13f198b6c78f3afe50083b05e5a4a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Projects\ZeroPercent\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
-        sha1="95869c8f30aad5c1073564cb5d76922fe0bee6ae">
+        sha1="3746d8d44f2f0ca6063c06923e721bf33ddc39ca">
         <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_af5dda05fdada2c8d6121150f4f180ad779541f3\classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Scott Wilde\.android\.android\build-cache\becc6a6559c33793557aaf4f708ec21be490dbe7\output\jars\classes.jar"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\e516f620e06395629e3b8c099d1bcb9113392b18\output\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
+        sha1="bd47a98a8f3d53220afca6f869f37c56c273c8d9">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_dd8ddf068f9d25ee6a47e9ee493458e820f61548\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\76531d66cffc5d48ff635026510fba485cb51737\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="f3071f3c7921e0c38d1e8e94a0d8b276843c21e1">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_cc35d16bb9ba1ce1ba656323a9f9e0ad978442f3\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\c24ad9764d0e50f5a07d136778995e2b16944cd4\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="4c0c3a9709adc7608860b0a9f65f661cd3ff4d07">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0a209e582a951ee442f9c46978fd92faa634029b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\4b45a687b41f13c8a9705df65547076f0e0d5306\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="ed18fdd695456683717079e695c5683cdc042d89">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_d6746c23e6390576e02a769312241c792a7e6ffc\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\bf6c893f4f6a8fd14d7f017e946fcf5177b3a6ee\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="eb366c8b72908e2afa66c66b0a3f1318265a473e">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_56f82d70c097ad00c4e47a433ec14d31e2f01af8\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\becc6a6559c33793557aaf4f708ec21be490dbe7\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.1"
         sha1="c7fcfccad6b3011e9656ffb583d4adfc8e09ac97">
-        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_1df618ffc117ef276866ae9dc78c6cb9c1e7658b\classes.dex" />
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\pre-dexed\debug\classes_1df618ffc117ef276866ae9dc78c6cb9c1e7658b.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\3423ff90cbe3faad80385fc8b72896bfc9d376f4\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="a8891df045333735af59551ffd3bf208f277c86b">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ac0ebc33a3f14e013319ebef1bb040c0242e0461\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Scott Wilde\.android\.android\build-cache\a2f1f68401dbcd01fe7ff381f42a754fce5f3193\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.1"
+        sha1="918e3e9514d90e54421b674cf0c95044f4e155ad">
+        <dex dex="C:\Projects\ZeroPercent\app\build\intermediates\pre-dexed\debug\classes_ccb92c25295a84f07f473e186df7ce04234314ae.jar" />
     </item>
 
 </items>

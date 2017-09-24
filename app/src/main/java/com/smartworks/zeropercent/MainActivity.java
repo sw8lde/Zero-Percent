@@ -3,41 +3,60 @@ package com.smartworks.zeropercent;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
+import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+
     private static final int PERMISSION_REQUEST_CONTACT = 9001;
     private static final int PERMISSION_SEND_SMS = 9002;
     private static final int PERMISSION_ACCESS_FINE_LOCATION = 9003;
+
+    private Switch mAutoStartSwitch;
     private Switch mEnabledSwitch;
+    private TextView mEnabledText;
     private CheckBox mAddLocCheckbox;
-    private SettingsListAdapter mSettingsListAdapter;
-    private ExpandableListView mSettingsList;
+
+    private boolean settingsExpanded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MobileAds.initialize(getApplicationContext(), getString(R.string.app_ad_id));
+        AdView bannerAd = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(getString(R.string.test_device))
+                .build();
+        bannerAd.loadAd(adRequest);
 
         initSettings();
     }
@@ -105,24 +124,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private int getPxFromDp(float pixels) {
-        // Get the screen'toggle density scale
-        final float scale = getResources().getDisplayMetrics().density;
-        // Convert the dps to pixels, based on density scale
-        return (int) (pixels * scale + 0.5f);
-    }
-
     private void initSettings() {
         final SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 
+        // enabled
         mEnabledSwitch = (Switch) findViewById(R.id.enabled_switch);
+        mEnabledText = (TextView) findViewById(R.id.enabled_text);
+
         if (BatteryMonitorService.isRunning) {
             mEnabledSwitch.setChecked(true);
-            mEnabledSwitch.setText(R.string.enabled);
+            mEnabledText.setText(R.string.enabled);
         } else {
             mEnabledSwitch.setChecked(false);
-            mEnabledSwitch.setText(R.string.disabled);
+            mEnabledText.setText(R.string.disabled);
         }
+
         mEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -134,13 +150,13 @@ public class MainActivity extends AppCompatActivity {
                         getPermissions();
                     } else {
                         startService(new Intent(getApplicationContext(), BatteryMonitorService.class));
-                        mEnabledSwitch.setText(R.string.enabled);
+                        mEnabledText.setText(R.string.enabled);
                         prefs.edit().putBoolean("sent_message", false).apply();
                         Log.d(TAG, "Battery monitoring enabled");
                     }
                 } else {
                     stopService(new Intent(getApplicationContext(), BatteryMonitorService.class));
-                    mEnabledSwitch.setText(R.string.disabled);
+                    mEnabledText.setText(R.string.disabled);
                     Log.d(TAG, "Battery monitoring disabled");
                 }
             }
@@ -153,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // set message
         findViewById(R.id.set_message_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // location
         mAddLocCheckbox = (CheckBox) findViewById(R.id.add_loc_checkbox);
         mAddLocCheckbox.setChecked(prefs.getBoolean("add_loc", false));
         mAddLocCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -188,10 +206,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // select contacts
         ((TextView) findViewById(R.id.contacts_hint)).setText(
                 getResources().getQuantityString(R.plurals.selected_contacts,
                         SelectContactsActivity.getSelectedContacts(this).size(),
                         SelectContactsActivity.getSelectedContacts(this).size()));
+
         findViewById(R.id.contacts_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,19 +224,67 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mSettingsListAdapter = new SettingsListAdapter(this);
-        mSettingsList = (ExpandableListView) findViewById(R.id.settings_list);
+        // settings list
+        findViewById(R.id.settings_list).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RotateAnimation anim;
 
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int width = metrics.widthPixels;
-        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            mSettingsList.setIndicatorBounds(width - getPxFromDp(56), width - getPxFromDp(8));
-        } else {
-            mSettingsList.setIndicatorBoundsRelative(width - getPxFromDp(56), width - getPxFromDp(8));
-        }
+                if(settingsExpanded) {
+                    findViewById(R.id.settings_list_items).setVisibility(View.GONE);
+                    anim = new RotateAnimation(180f, 0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                } else {
+                    findViewById(R.id.settings_list_items).setVisibility(View.VISIBLE);
+                    anim = new RotateAnimation(0f, 180f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                }
 
-        mSettingsList.setAdapter(mSettingsListAdapter);
+                anim.setInterpolator(new LinearInterpolator());
+                anim.setDuration(200);
+                anim.setFillAfter(true);
+                findViewById(R.id.arrow_down).startAnimation(anim);
+                settingsExpanded = !settingsExpanded;
+            }
+        });
+
+        // autostart
+        mAutoStartSwitch = (Switch) findViewById(R.id.autostart_switch);
+        mAutoStartSwitch.setChecked(prefs.getBoolean("autostart", true));
+        mAutoStartSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PackageManager pm  = getPackageManager();
+                prefs.edit().putBoolean("autostart", isChecked).apply();
+
+                if(isChecked) {
+                    ComponentName componentName = new ComponentName(MainActivity.this, BootReceiver.class);
+                    pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                            PackageManager.DONT_KILL_APP);
+                } else {
+                    ComponentName componentName = new ComponentName(MainActivity.this, BootReceiver.class);
+                    pm.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                            PackageManager.DONT_KILL_APP);
+                }
+            }
+        });
+
+        findViewById(R.id.autostart_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAutoStartSwitch.toggle();
+            }
+        });
+
+        // crit percent
+        findViewById(R.id.crit_percent_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCritPercentDialog(prefs);
+            }
+        });
+
+        ((TextView) findViewById(R.id.crit_precent))
+                .setText(getString(R.string.crit_percent_value, prefs.getInt("crit_percent", 5)));
+
     }
 
     @Override
@@ -276,6 +344,22 @@ public class MainActivity extends AppCompatActivity {
                         SelectContactsActivity.getSelectedContacts(this).size()));
     }
 
+    private void setDividerColor(NumberPicker picker, int color) {
+        java.lang.reflect.Field[] pickerFields = NumberPicker.class.getDeclaredFields();
+        for(java.lang.reflect.Field field: pickerFields) {
+            if(field.getName().equals("mSelectionDivider")) {
+                field.setAccessible(true);
+                try {
+                    ColorDrawable colorDrawable = new ColorDrawable(color);
+                    field.set(picker, colorDrawable);
+                } catch (IllegalArgumentException | Resources.NotFoundException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+    }
+
     public void showEditMessageDialog(final SharedPreferences prefs) {
         final EditText msg = new EditText(this);
         msg.setText(prefs.getString("message", getString(R.string.default_message)));
@@ -288,28 +372,47 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("message", msg.getText().toString());
                     editor.apply();
-
-                    ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(msg.getWindowToken(), 0);
                 }
             })
             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(msg.getWindowToken(), 0);
                 }
             })
             .setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(msg.getWindowToken(), 0);
+                    Log.d(TAG, "onCancel: ");
                 }
             })
             .show();
 
         msg.requestFocus();
-        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE))
-                .toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+    }
+
+    private void showCritPercentDialog(final SharedPreferences prefs) {
+        final NumberPicker picker = new NumberPicker(this);
+        picker.setMinValue(1);
+        picker.setMaxValue(100);
+        picker.setValue(prefs.getInt("crit_percent", 5));
+        setDividerColor(picker, ContextCompat.getColor(this, R.color.colorAccent));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+            .setTitle(R.string.crit_percent)
+            .setView(picker)
+            .setPositiveButton(R.string.set, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    prefs.edit().putInt("crit_percent", picker.getValue()).apply();
+                    ((TextView) findViewById(R.id.crit_precent))
+                            .setText(getString(R.string.crit_percent_value, picker.getValue()));
+                    dialog.dismiss();
+                }
+            })
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            })
+            .show();
     }
 }

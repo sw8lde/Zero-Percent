@@ -122,7 +122,7 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
                     overlayField.setAccessible(true);
                     overlayField.set(badge, null);
                 } catch (Exception e) {
-                    Log.d(TAG, "Badge Reflection Exception:");
+                    Log.d(TAG, "Badge Reflection Exception: ");
                     e.printStackTrace();
                 }
             }
@@ -154,10 +154,8 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 filteredContactsList = (ArrayList<Contact>) results.values;
-                ((SelectContactsActivity) context).updateResults(results.count);
                 notifyDataSetChanged();
             }
-
         };
     }
 
@@ -167,7 +165,9 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
 
     @Override
     public int getItemCount() {
-        return filteredContactsList.size();
+        if(filteredContactsList != null)
+            return filteredContactsList.size();
+        return 0;
     }
 
     private int getRandomColor(String typeColor) {

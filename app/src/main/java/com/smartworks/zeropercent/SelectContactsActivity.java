@@ -1,6 +1,5 @@
 package com.smartworks.zeropercent;
 
-import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,8 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,10 +19,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -40,7 +38,6 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -61,16 +58,19 @@ public class SelectContactsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        if(actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+
+        MobileAds.initialize(getApplicationContext(), getString(R.string.app_ad_id));
+        AdView bannerAd = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(getString(R.string.test_device))
+                .build();
+        bannerAd.loadAd(adRequest);
 
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+            public boolean onQueryTextSubmit(String query) { return false; }
 
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -78,6 +78,11 @@ public class SelectContactsActivity extends AppCompatActivity {
                     contactsAdapter.clearFilter();
                 } else {
                     contactsAdapter.getFilter().filter(newText);
+                }
+                if(contactsAdapter.getItemCount() == 0) {
+                    noResults.setVisibility(View.VISIBLE);
+                } else {
+                    noResults.setVisibility(View.GONE);
                 }
                 return true;
             }
@@ -93,7 +98,7 @@ public class SelectContactsActivity extends AppCompatActivity {
 
         ((DragScrollBar) findViewById(R.id.drag_scroll_bar)).setIndicator(new AlphabetIndicator(this), true);
 
-        getAsyncContacts().execute((Void[]) null);
+        getAsyncContacts();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -106,8 +111,8 @@ public class SelectContactsActivity extends AppCompatActivity {
         });
     }
 
-    private AsyncTask<Void, Void, Void> getAsyncContacts() {
-        return new AsyncTask<Void, Void, Void>() {
+    private void getAsyncContacts() {
+        new AsyncTask<Void, Void, Void>() {
             private ArrayList<Contact> contacts;
 
             @Override
@@ -123,7 +128,7 @@ public class SelectContactsActivity extends AppCompatActivity {
                 contactsAdapter = new ContactsAdapter(SelectContactsActivity.this, contacts);
                 contactsChooser.setAdapter(contactsAdapter);
             }
-        };
+        }.execute((Void[]) null);
     }
 
     private ArrayList<Contact> getContacts() {
@@ -230,14 +235,6 @@ public class SelectContactsActivity extends AppCompatActivity {
                 new TypeToken<ArrayList<Contact>>() {}.getType()));
 
         editor.apply();
-    }
-
-    public void updateResults(int count) {
-        if(count == 0) {
-            noResults.setVisibility(View.VISIBLE);
-        } else {
-            noResults.setVisibility(View.GONE);
-        }
     }
 }
 
