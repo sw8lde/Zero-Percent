@@ -104,7 +104,7 @@ public class SelectContactsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setSelectedContacts(getApplicationContext(), contactsAdapter.selectedContactsList);
+                setSelectedContacts(getApplicationContext(), contactsAdapter.getSelectedContacts());
                 setResult(RESULT_OK);
                 finish();
             }
@@ -216,7 +216,7 @@ public class SelectContactsActivity extends AppCompatActivity {
                 return true;
             case R.id.action_clear_all:
                 if(contactsAdapter != null) {
-                    contactsAdapter.selectedContactsList.clear();
+                    contactsAdapter.clearSelectedContacts();
                 }
                 return true;
         }

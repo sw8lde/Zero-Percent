@@ -42,7 +42,7 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
 
     private Context context;
     private ArrayList<Contact> contactsList, filteredContactsList;
-    ArrayList<Contact> selectedContactsList;
+    private ArrayList<Contact> selectedContactsList;
 
     ContactsAdapter(Context context, ArrayList<Contact> contactsList){
         super();
@@ -51,6 +51,11 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
         this.contactsList = contactsList;
         this.filteredContactsList = contactsList;
         this.selectedContactsList = SelectContactsActivity.getSelectedContacts(context);
+    }
+
+    public void clearSelectedContacts() {
+        selectedContactsList.clear();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -62,6 +67,7 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
         CheckBox check;
         QuickContactBadge badge;
         TextView name;
+        View view;
 
         ContactViewHolder(View v) {
             super(v);
@@ -76,6 +82,7 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
             check = (CheckBox) v.findViewById(R.id.check_contact);
             badge = (QuickContactBadge) v.findViewById(R.id.quickbadge);
             name = (TextView) v.findViewById(R.id.contact_text);
+            view = v;
         }
 
         private void getThumbnail(int pos) {
@@ -184,6 +191,10 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
         return returnColor;
     }
 
+    public ArrayList<Contact> getSelectedContacts() {
+        return selectedContactsList;
+    }
+
     @Nullable
     private Bitmap loadContactPhotoThumbnail(String photoData) {
         AssetFileDescriptor afd = null;
@@ -219,7 +230,7 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
     }
 
     @Override
-    public void onBindViewHolder(ContactViewHolder holder, int position) {
+    public void onBindViewHolder(final ContactViewHolder holder, int position) {
         final Contact c = filteredContactsList.get(position);
 
         holder.badge.assignContactUri(filteredContactsList.get(0).uri);
@@ -229,9 +240,11 @@ class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHo
         holder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if(isChecked
+                        && (buttonView.isPressed() || holder.view.isPressed())) {
                     selectedContactsList.add(c);
-                } else if(selectedContactsList.contains(c)) {
+                } else if(selectedContactsList.contains(c)
+                        && (buttonView.isPressed() || holder.view.isPressed())) {
                     selectedContactsList.remove(c);
                 }
             }
